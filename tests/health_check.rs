@@ -1,11 +1,11 @@
 use std::net::TcpListener;
-use email_service::configuration::{get_configuration, DatabaseSettings};
+use emailservice::configuration::{get_configuration, DatabaseSettings};
 use secrecy::ExposeSecret;
 use sqlx::{Connection, Executor, PgConnection, PgPool};
 use uuid::Uuid;
 use once_cell::sync::Lazy;
-use email_service::startup::run;
-use email_service::telemetry::{get_subscriber, init_subscriber};
+use emailservice::startup::run;
+use emailservice::telemetry::{get_subscriber, init_subscriber};
 
 static TRACING: Lazy<()> = Lazy::new(|| {
     let default_filter_level = "info".into();
