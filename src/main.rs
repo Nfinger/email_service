@@ -1,7 +1,6 @@
 use emailservice::configuration::get_configuration;
 use emailservice::startup::run;
 use emailservice::telemetry::{get_subscriber, init_subscriber};
-use secrecy::ExposeSecret;
 use sqlx::PgPool;
 use std::net::TcpListener;
 
@@ -12,8 +11,7 @@ async fn main() -> Result<(), std::io::Error> {
 
     let configuration = get_configuration().expect("Failed to read configuration");
     let connection_pool =
-        PgPool::connect_lazy(&configuration.database.connection_string().expose_secret())
-            .expect("Failed to connect to the database");
+        PgPool::connect_lazy_with(configuration.database.with_db());
 
     let address = format!(
         "{}:{}",
