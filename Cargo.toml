@@ -38,6 +38,7 @@ base64 = "0.21"
 sha3 = "0.9"
 urlencoding = "2"
 htmlescape = "0.3"
+actix-web-lab = "0.18"
 actix-web-flash-messages = { version = "0.4", features = ["cookies"] }
 hmac = { version = "0.12", features = ["std"] }
 actix-session = { version = "0.7", features = ["redis-rs-tls-session"] }
