@@ -2,6 +2,7 @@ use emailservice::configuration::{get_configuration, DatabaseSettings};
 use emailservice::email_client::EmailClient;
 use emailservice::startup::{Application, get_connection_pool};
 use emailservice::telemetry::{get_subscriber, init_subscriber};
+use emailservice::issue_delivery_worker::{try_execute_task, ExecutionOutcome};
 use once_cell::sync::Lazy;
 use sqlx::{Connection, Executor, PgConnection, PgPool};
 use uuid::Uuid;
@@ -38,6 +39,18 @@ pub struct ConfirmationLinks {
 }
 
 impl TestApp {
+    pub async fn dispatch_all_pending_emails(&self) {
+        loop {
+            if let ExecutionOutcome::EmptyQueue =
+                try_execute_task(&self.db_pool, &self.email_client)
+                    .await
+                    .unwrap()
+            {
+                break;
+            }
+        }
+    }
+
     pub async fn post_subscriptions(&self, body: String) -> reqwest::Response {
         self.api_client
             .post(&format!("{}/subscriptions", &self.address))

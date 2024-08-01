@@ -37,7 +37,7 @@ pub async fn validate_credentials(
         expected_password_hash = stored_password_hash;
     }
 
-    spawn_blocking_with_tracing(move || {
+    let _ = spawn_blocking_with_tracing(move || {
         verify_password_hash(expected_password_hash, credentials.password)
     })
     .await
